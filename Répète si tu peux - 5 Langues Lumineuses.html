@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)file:///C:/Users/leclerc%20ocass/Downloads/Index-Final-V2.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Répète si tu peux - 5 Langues Lumineuses</title>
+<style>
+:root{--bg:#ece9ff;--ink:#23204a;--rose:#ff5c8a;--mint:#2fbf86;--sun:#ffd166;--card:#fff;--soft:#d9d4ff;--glow:#ffd166}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1838;--ink:#f1eeff;--card:#2a2656;--soft:#3b3678}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Trebuchet MS",system-ui,sans-serif;line-height:1.5}
+main{max-width:780px;margin:0 auto;padding:16px}
+h1{font-size:1.65rem;margin:4px 0 0}
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.score{background:var(--sun);color:#23204a;border-radius:999px;padding:4px 14px;font-weight:700}
+.stage{display:flex;align-items:center;gap:12px;margin:12px 0}
+#cass{width:130px;flex:none;touch-action:none}
+.bubble{background:var(--card);border-radius:18px 18px 18px 4px;padding:12px 14px;flex:1;min-height:64px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.tabs{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+button{font:inherit;cursor:pointer;border:2px solid var(--ink);background:var(--card);color:var(--ink);border-radius:14px;padding:10px 14px;transition:.15s}
+button:active{transform:scale(.97)}
+.tabs button{flex:1;font-weight:700;min-width:110px}
+.tabs button[aria-pressed="true"]{background:var(--rose);color:#fff;border-color:var(--rose)}
+.langs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.langs button{border-radius:999px;padding:6px 12px;font-size:.85rem;font-weight:700}
+.langs button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.card{background:var(--card);border-radius:20px;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.q{font-size:1.15rem;margin:0 0 12px}
+.es{font-size:1.3rem;font-weight:700;margin:4px 0}
+.choices{display:grid;gap:8px}
+.choices button.ok{background:var(--mint);border-color:var(--mint);color:#fff}
+.choices button.ko{background:var(--soft);text-decoration:line-through}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.mic{background:var(--rose);color:#fff;border-color:var(--rose);font-weight:700}
+.next{background:var(--ink);color:var(--bg)}
+.heard{margin:10px 0 0;min-height:1.5em;font-style:italic}
+.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.photo-grid{grid-template-columns:1fr}}
+.photo-card{background:var(--card);border:2px solid var(--ink);border-radius:20px;padding:14px;transition:.2s;position:relative;overflow:hidden}
+.photo-card::before{content:"";position:absolute;inset:-40%;background:radial-gradient(circle at 30% 30%, var(--glow) 0%, transparent 60%);opacity:.5;pointer-events:none}
+.photo-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.14)}
+.photo-card .avatar{width:100%;height:118px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:3.2rem;margin-bottom:8px;border:2px dashed currentColor;position:relative}
+.photo-card h3{margin:6px 0 2px}
+.photo-card .tag{display:inline-block;background:var(--ink);color:var(--bg);border-radius:999px;padding:2px 10px;font-size:.75rem;font-weight:700;margin-bottom:6px}
+.photo-card p{margin:4px 0;font-size:.9rem;position:relative}
+#cass .blink{transform-box:fill-box;transform-origin:center;animation:blink 4.5s infinite}
+#cass #mTalk,#cass #mHappy,#cass #mSad{display:none}
+#cass[data-mood="talk"] #mTalk{display:block;transform-box:fill-box;transform-origin:center;animation:talk .28s infinite alternate}
+#cass[data-mood="happy"] #mHappy{display:block}
+#cass[data-mood="sad"] #mSad{display:block}
+#cass[data-mood="talk"] #mIdle,#cass[data-mood="happy"] #mIdle,#cass[data-mood="sad"] #mIdle{display:none}
+#cass[data-mood="happy"] #body{animation:hop .5s 2}
+#cass[data-mood="sad"] #body{transform:translateY(4px)}
+#cass #cheeks{opacity:.35}
+#cass[data-mood="happy"] #cheeks{opacity:.8}
+#float{animation:float 3s ease-in-out infinite}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+@keyframes talk{from{transform:scaleY(.4)}to{transform:scaleY(1.6)}}
+@keyframes hop{50%{transform:translateY(-14px)}}
+@keyframes float{50%{transform:translateY(-5px)}}
+
+.fallback-input{background:var(--soft);border-radius:14px;padding:10px;margin-top:10px}
+.fallback-input input{font:inherit}
+.emoji-big{font-size:3.2rem}
+.photo-img{transition:.3s}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><h1>Répète si tu peux ✨</h1><div class="score">⭐ <span id="score">0</span></div></div>
+<div class="stage">
+<svg id="cass" viewBox="0 0 200 200" data-mood="happy"><g id="float"><g id="body">
+<ellipse cx="55" cy="50" rx="20" ry="26" fill="#ff5c8a"></ellipse><ellipse cx="145" cy="50" rx="20" ry="26" fill="#ff5c8a"></ellipse>
+<ellipse cx="55" cy="52" rx="10" ry="15" fill="#ffb3c9"></ellipse><ellipse cx="145" cy="52" rx="10" ry="15" fill="#ffb3c9"></ellipse>
+<ellipse cx="100" cy="115" rx="75" ry="70" fill="#ff7aa3"></ellipse>
+<g class="blink"><circle cx="70" cy="100" r="17" fill="#fff"></circle><circle id="pL" cx="74.92352395784258" cy="103.4291269787732" r="8" fill="#23204a"></circle><circle cx="130" cy="100" r="17" fill="#fff"></circle><circle id="pR" cx="134.92352395784258" cy="103.4291269787732" r="8" fill="#23204a"></circle></g>
+<g id="cheeks"><circle cx="48" cy="128" r="9" fill="#ffd166"></circle><circle cx="152" cy="128" r="9" fill="#ffd166"></circle></g>
+<path id="mIdle" d="M84 132 Q100 144 116 132" stroke="#23204a" stroke-width="5" fill="none" stroke-linecap="round"></path>
+<ellipse id="mTalk" cx="100" cy="138" rx="14" ry="9" fill="#23204a"></ellipse><path id="mHappy" d="M78 128 Q100 160 122 128 Z" fill="#23204a" stroke-width="4" stroke-linejoin="round"></path><path id="mSad" d="M84 142 Q100 128 116 142" stroke="#23204a" stroke-width="5" fill="none" stroke-linecap="round"></path>
+</g></g></svg>
+<div class="bubble" id="bubble">7 légendes : Otis, Aretha, Nick, Jimi + Nina &amp; Marvin + bonus !</div>
+</div>
+<div class="langs" role="group"><button data-lang="es" aria-pressed="true">🇪🇸 ES</button><button data-lang="en" aria-pressed="false">🇬🇧 EN</button><button data-lang="de" aria-pressed="false">🇩🇪 DE</button><button data-lang="it" aria-pressed="false">🇮🇹 IT</button><button data-lang="pt" aria-pressed="false">🇧🇷 PT</button></div>
+<div class="tabs" role="group"><button id="tabPhrases" aria-pressed="false">Phrases utiles</button><button id="tabRepeat" aria-pressed="false">Répéter</button><button id="tabPhotos" aria-pressed="true">✨ Défis Photos</button></div>
+<div id="micInfo" style="background:#fff3cd;border:2px solid #ffd166;border-radius:12px;padding:8px 12px;margin:8px 0;font-size:.9rem;display:none">ℹ️ Micro non détecté : tu pourras taper ta réponse au clavier. Sur Chrome/Edge avec HTTPS, le micro marche.</div><section class="card" id="game"><p class="q">7 légendes lumineuses • 🇪🇸 Espagnol</p><div class="photo-grid" id="grid"><div class="photo-card" style="--glow: #ff5c8a;"><div class="avatar" style="color:#ff5c8a;background:#ff5c8a1a"><span class="emoji-big">🎙️</span><img class="photo-img" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:12px;position:absolute;inset:0"></div><span class="tag">Soul Legend</span><h3>Otis Redding</h3><p>Voix chaude, cœur lumineux.</p><p><em>La légende de la soul</em></p><p class="es">Sittin' on the dock of the bay, cantando con el alma</p><div class="row"><button class="mic">🔊 Écouter</button><button class="next">🎤 Répéter</button><label style="cursor:pointer;border:2px dashed var(--ink);border-radius:10px;padding:6px 10px;font-size:.8rem">📷 Ajouter photo<input type="file" accept="image/*" style="display:none" class="photo-input"></label></div><p class="heard"></p></div><div class="photo-card" style="--glow: #ffd166;"><div class="avatar" style="color:#ffd166;background:#ffd1661a"><span class="emoji-big">👑</span><img class="photo-img" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:12px;position:absolute;inset:0"></div><span class="tag">Queen of Soul</span><h3>Aretha Franklin</h3><p>Puissance et lumière.</p><p><em>R-E-S-P-E-C-T</em></p><p class="es">R-E-S-P-E-C-T, dime lo que significa para mí</p><div class="row"><button class="mic">🔊 Écouter</button><button class="next">🎤 Répéter</button><label style="cursor:pointer;border:2px dashed var(--ink);border-radius:10px;padding:6px 10px;font-size:.8rem">📷 Ajouter photo<input type="file" accept="image/*" style="display:none" class="photo-input"></label></div><p class="heard"></p></div><div class="photo-card" style="--glow: #2fbf86;"><div class="avatar" style="color:#2fbf86;background:#2fbf861a"><span class="emoji-big">🎬</span><img class="photo-img" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:12px;position:absolute;inset:0"></div><span class="tag">Un vrai de vrai</span><h3>Nick Nolte</h3><p>Grave, posé, lumineux.</p><p><em>Le regard cinéma</em></p><p class="es">Un actor de verdad, con voz profunda y luminosa</p><div class="row"><button class="mic">🔊 Écouter</button><button class="next">🎤 Répéter</button><label style="cursor:pointer;border:2px dashed var(--ink);border-radius:10px;padding:6px 10px;font-size:.8rem">📷 Ajouter photo<input type="file" accept="image/*" style="display:none" class="photo-input"></label></div><p class="heard"></p></div><div class="photo-card" style="--glow: #a78bfa;"><div class="avatar" style="color:#a78bfa;background:#a78bfa1a"><span class="emoji-big">🎸</span><img class="photo-img" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:12px;position:absolute;inset:0"></div><span class="tag">Guitare Lumineuse</span><h3>Jimi Hendrix</h3><p>Nouveau ! Défi ajouté par toi.</p><p><em>L'éclair qui chante - NOUVEAU</em></p><p class="es">¡La guitarra llora y ríe, pura luz!</p><div class="row"><button class="mic">🔊 Écouter</button><button class="next">🎤 Répéter</button><label style="cursor:pointer;border:2px dashed var(--ink);border-radius:10px;padding:6px 10px;font-size:.8rem">📷 Ajouter photo<input type="file" accept="image/*" style="display:none" class="photo-input"></label></div><p class="heard"></p></div><div class="photo-card" style="--glow: #f472b6;"><div class="avatar" style="color:#f472b6;background:#f472b61a"><span class="emoji-big">🎹</span><img class="photo-img" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:12px;position:absolute;inset:0"></div><span class="tag">Choix 1 - Âme</span><h3>Nina Simone</h3><p>Mon choix 1 - intense et lumineuse.</p><p><em>La prêtresse de la soul</em></p><p class="es">Siento mi alma, soy libre y luminosa</p><div class="row"><button class="mic">🔊 Écouter</button><button class="next">🎤 Répéter</button><label style="cursor:pointer;border:2px dashed var(--ink);border-radius:10px;padding:6px 10px;font-size:.8rem">📷 Ajouter photo<input type="file" accept="image/*" style="display:none" class="photo-input"></label></div><p class="heard"></p></div><div class="photo-card" style="--glow: #60a5fa;"><div class="avatar" style="color:#60a5fa;background:#60a5fa1a"><span class="emoji-big">🌟</span><img class="photo-img" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:12px;position:absolute;inset:0"></div><span class="tag">Choix 2 - Groove</span><h3>Marvin Gaye</h3><p>Mon choix 2 - doux et lumineux.</p><p><em>What's Going On, lumière</em></p><p class="es">¿Qué está pasando? Hablemos con amor y luz</p><div class="row"><button class="mic">🔊 Écouter</button><button class="next">🎤 Répéter</button><label style="cursor:pointer;border:2px dashed var(--ink);border-radius:10px;padding:6px 10px;font-size:.8rem">📷 Ajouter photo<input type="file" accept="image/*" style="display:none" class="photo-input"></label></div><p class="heard"></p></div><div class="photo-card" style="--glow: #facc15;"><div class="avatar" style="color:#facc15;background:#facc151a"><span class="emoji-big">✨</span><img class="photo-img" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:12px;position:absolute;inset:0"></div><span class="tag">Bonus</span><h3>Être Lumineux</h3><p>Défi bonus - sourire en parlant.</p><p><em>Reste lumineux</em></p><p class="es">Sigue luminoso incluso en la sombra</p><div class="row"><button class="mic">🔊 Écouter</button><button class="next">🎤 Répéter</button><label style="cursor:pointer;border:2px dashed var(--ink);border-radius:10px;padding:6px 10px;font-size:.8rem">📷 Ajouter photo<input type="file" accept="image/*" style="display:none" class="photo-input"></label></div><p class="heard"></p></div></div></section>
+</main>
+<script>
+const LANGS={es:{name:"Espagnol",code:"es-ES",flag:"🇪🇸"},en:{name:"Anglais",code:"en-US",flag:"🇬🇧"},de:{name:"Allemand",code:"de-DE",flag:"🇩🇪"},it:{name:"Italien",code:"it-IT",flag:"🇮🇹"},pt:{name:"Portugais",code:"pt-BR",flag:"🇧🇷"}};
+const PHRASES=[
+{fr:"Bonjour",es:"Hola, buenos días",en:"Hello, good morning",de:"Hallo, guten Morgen",it:"Ciao, buongiorno",pt:"Olá, bom dia"},
+{fr:"Merci beaucoup",es:"Muchas gracias",en:"Thank you very much",de:"Vielen Dank",it:"Grazie mille",pt:"Muito obrigado"},
+{fr:"Où sont les toilettes ?",es:"¿Dónde están los baños?",en:"Where are the restrooms?",de:"Wo sind die Toiletten?",it:"Dove sono i bagni?",pt:"Onde fica o banheiro?"},
+{fr:"Combien ça coûte ?",es:"¿Cuánto cuesta?",en:"How much does it cost?",de:"Wie viel kostet das?",it:"Quanto costa?",pt:"Quanto custa?"},
+{fr:"Je ne comprends pas",es:"No entiendo",en:"I don't understand",de:"Ich verstehe nicht",it:"Non capisco",pt:"Não entendo"},
+{fr:"C’est de la soul, pur et lumineux",es:"Es soul, puro y luminoso",en:"It's soul, pure and luminous",de:"Es ist Soul, rein und leuchtend",it:"È soul, puro e luminoso",pt:"É soul, puro e luminoso"},
+{fr:"On garde la lumière allumée",es:"Mantenemos la luz encendida",en:"We keep the light on",de:"Wir lassen das Licht an",it:"Teniamo la luce accesa",pt:"Mantemos a luz acesa"},
+{fr:"Un vrai de vrai, respect total",es:"Un verdadero de verdad, respeto total",en:"The real deal, total respect",de:"Ein echter, totaler Respekt",it:"Uno vero, rispetto totale",pt:"Um verdadeiro, respeito total"}
+];
+const PHOTO_DEFIS=[
+{id:"otis",nom:"Otis Redding",tag:"Soul Legend",couleur:"#ff5c8a",emoji:"🎙️",fr:"La légende de la soul",tr:{es:"Sittin' on the dock of the bay, cantando con el alma",en:"Sittin' on the dock of the bay, singing with soul",de:"Sittin' on the dock of the bay, mit Seele singen",it:"Sittin' on the dock of the bay, cantando con l'anima",pt:"Sittin' on the dock of the bay, cantando com a alma"},desc:"Voix chaude, cœur lumineux."},
+{id:"aretha",nom:"Aretha Franklin",tag:"Queen of Soul",couleur:"#ffd166",emoji:"👑",fr:"R-E-S-P-E-C-T",tr:{es:"R-E-S-P-E-C-T, dime lo que significa para mí",en:"R-E-S-P-E-C-T, tell me what it means to me",de:"R-E-S-P-E-C-T, sag mir was es bedeutet",it:"R-E-S-P-E-C-T, dimmi cosa significa per me",pt:"R-E-S-P-E-C-T, me diga o que significa para mim"},desc:"Puissance et lumière."},
+{id:"nick",nom:"Nick Nolte",tag:"Un vrai de vrai",couleur:"#2fbf86",emoji:"🎬",fr:"Le regard cinéma",tr:{es:"Un actor de verdad, con voz profunda y luminosa",en:"A real actor, deep and luminous voice",de:"Ein echter Schauspieler, tiefe leuchtende Stimme",it:"Un attore vero, voce profonda e luminosa",pt:"Um ator de verdade, voz profunda e luminosa"},desc:"Grave, posé, lumineux."},
+{id:"jimi",nom:"Jimi Hendrix",tag:"Guitare Lumineuse",couleur:"#a78bfa",emoji:"🎸",fr:"L'éclair qui chante - NOUVEAU",tr:{es:"¡La guitarra llora y ríe, pura luz!",en:"The guitar weeps and laughs, pure light!",de:"Die Gitarre weint und lacht, reines Licht!",it:"La chitarra piange e ride, luce pura!",pt:"A guitarra chora e ri, luz pura!"},desc:"Nouveau ! Défi ajouté par toi."},
+{id:"nina",nom:"Nina Simone",tag:"Choix 1 - Âme",couleur:"#f472b6",emoji:"🎹",fr:"La prêtresse de la soul",tr:{es:"Siento mi alma, soy libre y luminosa",en:"I feel my soul, I'm free and luminous",de:"Ich fühle meine Seele, frei und leuchtend",it:"Sento la mia anima, libera e luminosa",pt:"Sinto minha alma, livre e luminosa"},desc:"Mon choix 1 - intense et lumineuse."},
+{id:"marvin",nom:"Marvin Gaye",tag:"Choix 2 - Groove",couleur:"#60a5fa",emoji:"🌟",fr:"What's Going On, lumière",tr:{es:"¿Qué está pasando? Hablemos con amor y luz",en:"What's going on? Let's talk with love and light",de:"Was ist los? Lass uns mit Liebe und Licht sprechen",it:"Cosa sta succedendo? Parliamo con amore e luce",pt:"O que está acontecendo? Vamos falar com amor e luz"},desc:"Mon choix 2 - doux et lumineux."},
+{id:"lumineux",nom:"Être Lumineux",tag:"Bonus",couleur:"#facc15",emoji:"✨",fr:"Reste lumineux",tr:{es:"Sigue luminoso incluso en la sombra",en:"Stay luminous even in the shadow",de:"Bleib leuchtend auch im Schatten",it:"Rimani luminoso anche nell'ombra",pt:"Continue luminoso mesmo na sombra"},desc:"Défi bonus - sourire en parlant."}
+];
+const $=id=>document.getElementById(id);
+const cass=$("cass"),game=$("game");
+let score=0,currentLang="es",mode="photos",current=null;
+function mood(m){cass.dataset.mood=m;}
+function say(t,m){$("bubble").textContent=t;if(m)mood(m);}
+function addScore(n){score+=n;$("score").textContent=score;}
+const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+const pick=()=>PHRASES[Math.floor(Math.random()*PHRASES.length)];
+document.addEventListener("pointermove",e=>{
+const r=cass.getBoundingClientRect();
+const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);
+const d=Math.hypot(dx,dy)||1,k=Math.min(1,d/150)*6;
+[["pL",70],["pR",130]].forEach(([id,cx])=>{
+const p=$(id);if(p){p.setAttribute("cx",cx+dx/d*k);p.setAttribute("cy",100+dy/d*k);}
+});
+});
+function speak(text){
+return new Promise(res=>{
+if(!("speechSynthesis" in window)) return res();
+speechSynthesis.cancel();
+const u=new SpeechSynthesisUtterance(text);
+u.lang=LANGS[currentLang].code;u.rate=0.85;
+u.onstart=()=>mood("talk");
+u.onend=u.onerror=()=>{mood("idle");res();};
+speechSynthesis.speak(u);
+});
+}
+const norm=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();
+function similarity(a,b){
+a=norm(a);b=norm(b);
+const m=Array.from({length:a.length+1},(_,i)=>[i]);
+for(let j=1;j<=b.length;j++) m[0][j]=j;
+for(let i=1;i<=a.length;i++) for(let j=1;j<=b.length;j++) m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+return 1-m[a.length][b.length]/(Math.max(a.length,b.length)||1);
+}
+function phrasesRound(){
+current=pick();
+const good=current[currentLang]||current.es;
+const options=shuffle([current,...shuffle(PHRASES.filter(p=>p!==current)).slice(0,2)]);
+game.innerHTML=`<p class="q">Comment dit-on : « ${current.fr} » ? <small>${LANGS[currentLang].flag} ${LANGS[currentLang].name}</small></p><div class="choices"></div>`;
+const box=game.querySelector(".choices");
+options.forEach(o=>{
+const b=document.createElement("button");
+b.textContent=o[currentLang]||o.es;
+b.onclick=async()=>{
+box.querySelectorAll("button").forEach(x=>x.disabled=true);
+if(o===current){b.classList.add("ok");addScore(1);say("¡Muy bien ! Bravo !","happy");await speak(good);}
+else{b.classList.add("ko");[...box.children].find(x=>x.textContent===good).classList.add("ok");say("Pas tout à fait. Écoute.","sad");await speak(good);}
+nextButton(phrasesRound);
+};
+box.appendChild(b);
+});
+}
+function repeatRound(){
+current=pick();
+const txt=current[currentLang]||current.es;
+game.innerHTML=`<p class="q">Écoute, puis répète :</p><p class="es">${txt}</p><p>« ${current.fr} »</p><div class="row"><button id="listen">🔊 Écouter</button><button id="mic" class="mic">🎤 Parler</button></div><p class="heard" id="heard"></p>`;
+$("listen").onclick=()=>speak(txt);
+$("mic").onclick=listen;
+say("Écoute puis parle en "+LANGS[currentLang].name+".","idle");
+}
+function hasMic(){ return !!(window.SpeechRecognition || window.webkitSpeechRecognition); }
+function listenFallback(container, expected, successCallback){
+  if(container.querySelector(".fallback-input")) return;
+  const div = document.createElement("div");
+  div.className="fallback-input";
+  div.innerHTML=`<p style="margin:8px 0">🎤 Micro non détecté sur ton modèle. Tape ce que tu voulais dire :</p><div class="row"><input type="text" placeholder="Tape ta réponse ici..." style="flex:1;padding:10px;border-radius:10px;border:2px solid var(--ink)" /><button class="next">Valider</button></div>`;
+  const input = div.querySelector("input");
+  const btn = div.querySelector("button");
+  btn.onclick = () => {
+    const txt = input.value.trim();
+    if(!txt) return;
+    const sim = similarity(txt, expected);
+    container.querySelector(".heard").textContent = "Tu as tapé : « "+txt+" » ("+Math.round(sim*100)+"%)";
+    if(sim>=0.6){ addScore(sim>=0.85?3:2); say("¡Luminoso! "+Math.round(sim*100)+"% !","happy"); if(successCallback) successCallback(); }
+    else { say("Presque ! Encore un peu ?","idle"); }
+  };
+  container.appendChild(div);
+  input.focus();
+}
+function listen(){
+
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR){ listenFallback(game, current[currentLang]||current.es, ()=>nextButton(repeatRound)); return; }
+const r=new SR();r.lang=LANGS[currentLang].code;r.interimResults=false;r.maxAlternatives=3;
+say("Je t’écoute…","idle");
+r.onresult=e=>{
+const alts=[...e.results[0]].map(a=>a.transcript);
+const best=Math.max(...alts.map(t=>similarity(t,current[currentLang]||current.es)));
+$("heard").textContent="Cass a entendu : « "+alts[0]+" »";
+if(best>=0.75){addScore(2);say("¡Perfecto !","happy");nextButton(repeatRound);}
+else{say("Presque ! Réessaie.","sad");}
+};
+r.onerror=e=>say(e.error==="not-allowed"?"Autorise le micro.":"Rien entendu.","sad");
+r.start();
+}
+function photosRound(){
+game.innerHTML=`<p class="q">7 légendes lumineuses • ${LANGS[currentLang].flag} ${LANGS[currentLang].name}</p><div class="photo-grid" id="grid"></div>`;
+const grid=$("grid");
+PHOTO_DEFIS.forEach(d=>{
+const txt=d.tr[currentLang]||d.tr.es;
+const card=document.createElement("div");
+card.className="photo-card";card.style.setProperty("--glow",d.couleur);
+card.innerHTML=`<div class="avatar" style="color:${d.couleur};background:${d.couleur}1a"><span class="emoji-big">${d.emoji}</span><img class="photo-img" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:12px;position:absolute;inset:0" /></div><span class="tag">${d.tag}</span><h3>${d.nom}</h3><p>${d.desc}</p><p><em>${d.fr}</em></p><p class="es">${txt}</p><div class="row"><button class="mic">🔊 Écouter</button><button class="next">🎤 Répéter</button><label style="cursor:pointer;border:2px dashed var(--ink);border-radius:10px;padding:6px 10px;font-size:.8rem">📷 Ajouter photo<input type="file" accept="image/*" style="display:none" class="photo-input" /></label></div><p class="heard"></p>`;
+    // Photo upload handler
+    const fileInput = card.querySelector(".photo-input");
+    const imgEl = card.querySelector(".photo-img");
+    const emojiEl = card.querySelector(".emoji-big");
+    fileInput.onchange = (e) => {
+      const file = e.target.files[0];
+      if(!file) return;
+      const url = URL.createObjectURL(file);
+      imgEl.src = url;
+      imgEl.style.display = "block";
+      emojiEl.style.display = "none";
+      say("Photo ajoutée pour "+d.nom+" ! ✨","happy");
+    };
+
+const btnListen=card.querySelector(".mic");const btnRepeat=card.querySelector(".next");const heardEl=card.querySelector(".heard");
+btnListen.onclick=e=>{e.stopPropagation();speak(txt);say(d.nom+" : "+d.fr,"talk");};
+btnRepeat.onclick=e=>{e.stopPropagation();say("À toi ! Lumineux comme "+d.nom+" !","happy");listenPhoto(heardEl,txt);};
+grid.appendChild(card);
+});
+}
+function listenPhoto(heardEl,expected){
+const container = heardEl.parentElement;
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR){ listenFallback(container, expected, null); return; }
+const r=new SR();r.lang=LANGS[currentLang].code;
+heardEl.textContent="Je t’écoute... sois lumineux ✨";mood("talk");
+r.onresult=e=>{
+const txt=e.results[0][0].transcript;const sim=similarity(txt,expected);
+heardEl.textContent="Tu as dit : « "+txt+" » ("+Math.round(sim*100)+"%)";
+if(sim>=0.6){addScore(3);say("¡Luminoso! "+Math.round(sim*100)+"% !","happy");}
+else{say("Pas mal, encore un peu de lumière ?","idle");}
+setTimeout(()=>mood("idle"),1200);
+};
+r.onerror=()=>{heardEl.textContent="Rien entendu.";mood("sad");};
+r.start();
+}
+function nextButton(fn){
+const b=document.createElement("button");b.className="next";b.textContent="Suivant";
+b.onclick=()=>{mood("idle");fn();};
+const row=document.createElement("div");row.className="row";row.appendChild(b);
+game.appendChild(row);b.focus();
+}
+function setMode(m){
+mode=m;speechSynthesis&&speechSynthesis.cancel();mood("idle");
+$("tabPhrases").setAttribute("aria-pressed",m==="phrases");
+$("tabRepeat").setAttribute("aria-pressed",m==="repeat");
+$("tabPhotos").setAttribute("aria-pressed",m==="photos");
+if(m==="phrases"){say("Trouve en "+LANGS[currentLang].name+" !");phrasesRound();}
+else if(m==="repeat"){say("Répète en "+LANGS[currentLang].name+" !");repeatRound();}
+else{say("7 légendes : Otis, Aretha, Nick, Jimi + Nina & Marvin + bonus !","happy");photosRound();}
+}
+function setLang(l){
+currentLang=l;
+document.querySelectorAll(".langs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===l));
+setMode(mode);
+}
+document.querySelectorAll(".langs button").forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
+$("tabPhrases").onclick=()=>setMode("phrases");
+$("tabRepeat").onclick=()=>setMode("repeat");
+$("tabPhotos").onclick=()=>setMode("photos");
+setLang("es");
+setTimeout(()=>{
+  const has = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  if(!has){ document.getElementById("micInfo").style.display="block"; }
+}, 500);
+
+</script>
+
+
+</body></html>
