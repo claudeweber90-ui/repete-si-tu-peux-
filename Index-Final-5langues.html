@@ -1,235 +1,199 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Répète si tu peux - 5 Langues Lumineuses</title>
-<style>
-:root{--bg:#ece9ff;--ink:#23204a;--rose:#ff5c8a;--mint:#2fbf86;--sun:#ffd166;--card:#fff;--soft:#d9d4ff;--glow:#ffd166}
-@media (prefers-color-scheme:dark){:root{--bg:#1b1838;--ink:#f1eeff;--card:#2a2656;--soft:#3b3678}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Trebuchet MS",system-ui,sans-serif;line-height:1.5}
-main{max-width:780px;margin:0 auto;padding:16px}
-h1{font-size:1.65rem;margin:4px 0 0}
-.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.score{background:var(--sun);color:#23204a;border-radius:999px;padding:4px 14px;font-weight:700}
-.stage{display:flex;align-items:center;gap:12px;margin:12px 0}
-#cass{width:130px;flex:none;touch-action:none}
-.bubble{background:var(--card);border-radius:18px 18px 18px 4px;padding:12px 14px;flex:1;min-height:64px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-.tabs{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
-button{font:inherit;cursor:pointer;border:2px solid var(--ink);background:var(--card);color:var(--ink);border-radius:14px;padding:10px 14px;transition:.15s}
-button:active{transform:scale(.97)}
-.tabs button{flex:1;font-weight:700;min-width:110px}
-.tabs button[aria-pressed="true"]{background:var(--rose);color:#fff;border-color:var(--rose)}
-.langs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
-.langs button{border-radius:999px;padding:6px 12px;font-size:.85rem;font-weight:700}
-.langs button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.card{background:var(--card);border-radius:20px;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,.06)}
-.q{font-size:1.15rem;margin:0 0 12px}
-.es{font-size:1.3rem;font-weight:700;margin:4px 0}
-.choices{display:grid;gap:8px}
-.choices button.ok{background:var(--mint);border-color:var(--mint);color:#fff}
-.choices button.ko{background:var(--soft);text-decoration:line-through}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.mic{background:var(--rose);color:#fff;border-color:var(--rose);font-weight:700}
-.next{background:var(--ink);color:var(--bg)}
-.heard{margin:10px 0 0;min-height:1.5em;font-style:italic}
-.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:600px){.photo-grid{grid-template-columns:1fr}}
-.photo-card{background:var(--card);border:2px solid var(--ink);border-radius:20px;padding:14px;transition:.2s;position:relative;overflow:hidden}
-.photo-card::before{content:"";position:absolute;inset:-40%;background:radial-gradient(circle at 30% 30%, var(--glow) 0%, transparent 60%);opacity:.5;pointer-events:none}
-.photo-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.14)}
-.photo-card .avatar{width:100%;height:118px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:3.2rem;margin-bottom:8px;border:2px dashed currentColor;position:relative}
-.photo-card h3{margin:6px 0 2px}
-.photo-card .tag{display:inline-block;background:var(--ink);color:var(--bg);border-radius:999px;padding:2px 10px;font-size:.75rem;font-weight:700;margin-bottom:6px}
-.photo-card p{margin:4px 0;font-size:.9rem;position:relative}
-#cass .blink{transform-box:fill-box;transform-origin:center;animation:blink 4.5s infinite}
-#cass #mTalk,#cass #mHappy,#cass #mSad{display:none}
-#cass[data-mood="talk"] #mTalk{display:block;transform-box:fill-box;transform-origin:center;animation:talk .28s infinite alternate}
-#cass[data-mood="happy"] #mHappy{display:block}
-#cass[data-mood="sad"] #mSad{display:block}
-#cass[data-mood="talk"] #mIdle,#cass[data-mood="happy"] #mIdle,#cass[data-mood="sad"] #mIdle{display:none}
-#cass[data-mood="happy"] #body{animation:hop .5s 2}
-#cass[data-mood="sad"] #body{transform:translateY(4px)}
-#cass #cheeks{opacity:.35}
-#cass[data-mood="happy"] #cheeks{opacity:.8}
-#float{animation:float 3s ease-in-out infinite}
-@keyframes blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
-@keyframes talk{from{transform:scaleY(.4)}to{transform:scaleY(1.6)}}
-@keyframes hop{50%{transform:translateY(-14px)}}
-@keyframes float{50%{transform:translateY(-5px)}}
-</style>
-</head>
-<body>
-<main>
-<div class="top"><h1>Répète si tu peux ✨</h1><div class="score">⭐ <span id="score">0</span></div></div>
-<div class="stage">
-<svg id="cass" viewBox="0 0 200 200" data-mood="idle"><g id="float"><g id="body">
-<ellipse cx="55" cy="50" rx="20" ry="26" fill="#ff5c8a"/><ellipse cx="145" cy="50" rx="20" ry="26" fill="#ff5c8a"/>
-<ellipse cx="55" cy="52" rx="10" ry="15" fill="#ffb3c9"/><ellipse cx="145" cy="52" rx="10" ry="15" fill="#ffb3c9"/>
-<ellipse cx="100" cy="115" rx="75" ry="70" fill="#ff7aa3"/>
-<g class="blink"><circle cx="70" cy="100" r="17" fill="#fff"/><circle id="pL" cx="70" cy="100" r="8" fill="#23204a"/><circle cx="130" cy="100" r="17" fill="#fff"/><circle id="pR" cx="130" cy="100" r="8" fill="#23204a"/></g>
-<g id="cheeks"><circle cx="48" cy="128" r="9" fill="#ffd166"/><circle cx="152" cy="128" r="9" fill="#ffd166"/></g>
-<path id="mIdle" d="M84 132 Q100 144 116 132" stroke="#23204a" stroke-width="5" fill="none" stroke-linecap="round"/>
-<ellipse id="mTalk" cx="100" cy="138" rx="14" ry="9" fill="#23204a"/><path id="mHappy" d="M78 128 Q100 160 122 128 Z" fill="#23204a" stroke-width="4" stroke-linejoin="round"/><path id="mSad" d="M84 142 Q100 128 116 142" stroke="#23204a" stroke-width="5" fill="none" stroke-linecap="round"/>
-</g></g></svg>
-<div class="bubble" id="bubble">Salut ! 5 langues, 7 légendes lumineuses. Choisis ton défi.</div>
-</div>
-<div class="langs" role="group"><button data-lang="es" aria-pressed="true">🇪🇸 ES</button><button data-lang="en" aria-pressed="false">🇬🇧 EN</button><button data-lang="de" aria-pressed="false">🇩🇪 DE</button><button data-lang="it" aria-pressed="false">🇮🇹 IT</button><button data-lang="pt" aria-pressed="false">🇧🇷 PT</button></div>
-<div class="tabs" role="group"><button id="tabPhrases" aria-pressed="false">Phrases utiles</button><button id="tabRepeat" aria-pressed="false">Répéter</button><button id="tabPhotos" aria-pressed="true">✨ Défis Photos</button></div>
-<section class="card" id="game"></section>
-</main>
-<script>
-const LANGS={es:{name:"Espagnol",code:"es-ES",flag:"🇪🇸"},en:{name:"Anglais",code:"en-US",flag:"🇬🇧"},de:{name:"Allemand",code:"de-DE",flag:"🇩🇪"},it:{name:"Italien",code:"it-IT",flag:"🇮🇹"},pt:{name:"Portugais",code:"pt-BR",flag:"🇧🇷"}};
-const PHRASES=[
-{fr:"Bonjour",es:"Hola, buenos días",en:"Hello, good morning",de:"Hallo, guten Morgen",it:"Ciao, buongiorno",pt:"Olá, bom dia"},
-{fr:"Merci beaucoup",es:"Muchas gracias",en:"Thank you very much",de:"Vielen Dank",it:"Grazie mille",pt:"Muito obrigado"},
-{fr:"Où sont les toilettes ?",es:"¿Dónde están los baños?",en:"Where are the restrooms?",de:"Wo sind die Toiletten?",it:"Dove sono i bagni?",pt:"Onde fica o banheiro?"},
-{fr:"Combien ça coûte ?",es:"¿Cuánto cuesta?",en:"How much does it cost?",de:"Wie viel kostet das?",it:"Quanto costa?",pt:"Quanto custa?"},
-{fr:"Je ne comprends pas",es:"No entiendo",en:"I don't understand",de:"Ich verstehe nicht",it:"Non capisco",pt:"Não entendo"},
-{fr:"C’est de la soul, pur et lumineux",es:"Es soul, puro y luminoso",en:"It's soul, pure and luminous",de:"Es ist Soul, rein und leuchtend",it:"È soul, puro e luminoso",pt:"É soul, puro e luminoso"},
-{fr:"On garde la lumière allumée",es:"Mantenemos la luz encendida",en:"We keep the light on",de:"Wir lassen das Licht an",it:"Teniamo la luce accesa",pt:"Mantemos a luz acesa"},
-{fr:"Un vrai de vrai, respect total",es:"Un verdadero de verdad, respeto total",en:"The real deal, total respect",de:"Ein echter, totaler Respekt",it:"Uno vero, rispetto totale",pt:"Um verdadeiro, respeito total"}
-];
-const PHOTO_DEFIS=[
-{id:"otis",nom:"Otis Redding",tag:"Soul Legend",couleur:"#ff5c8a",emoji:"🎙️",fr:"La légende de la soul",tr:{es:"Sittin' on the dock of the bay, cantando con el alma",en:"Sittin' on the dock of the bay, singing with soul",de:"Sittin' on the dock of the bay, mit Seele singen",it:"Sittin' on the dock of the bay, cantando con l'anima",pt:"Sittin' on the dock of the bay, cantando com a alma"},desc:"Voix chaude, cœur lumineux."},
-{id:"aretha",nom:"Aretha Franklin",tag:"Queen of Soul",couleur:"#ffd166",emoji:"👑",fr:"R-E-S-P-E-C-T",tr:{es:"R-E-S-P-E-C-T, dime lo que significa para mí",en:"R-E-S-P-E-C-T, tell me what it means to me",de:"R-E-S-P-E-C-T, sag mir was es bedeutet",it:"R-E-S-P-E-C-T, dimmi cosa significa per me",pt:"R-E-S-P-E-C-T, me diga o que significa para mim"},desc:"Puissance et lumière."},
-{id:"nick",nom:"Nick Nolte",tag:"Un vrai de vrai",couleur:"#2fbf86",emoji:"🎬",fr:"Le regard cinéma",tr:{es:"Un actor de verdad, con voz profunda y luminosa",en:"A real actor, deep and luminous voice",de:"Ein echter Schauspieler, tiefe leuchtende Stimme",it:"Un attore vero, voce profonda e luminosa",pt:"Um ator de verdade, voz profunda e luminosa"},desc:"Grave, posé, lumineux."},
-{id:"jimi",nom:"Jimi Hendrix",tag:"Guitare Lumineuse",couleur:"#a78bfa",emoji:"🎸",fr:"L'éclair qui chante - NOUVEAU",tr:{es:"¡La guitarra llora y ríe, pura luz!",en:"The guitar weeps and laughs, pure light!",de:"Die Gitarre weint und lacht, reines Licht!",it:"La chitarra piange e ride, luce pura!",pt:"A guitarra chora e ri, luz pura!"},desc:"Nouveau ! Défi ajouté par toi."},
-{id:"nina",nom:"Nina Simone",tag:"Choix 1 - Âme",couleur:"#f472b6",emoji:"🎹",fr:"La prêtresse de la soul",tr:{es:"Siento mi alma, soy libre y luminosa",en:"I feel my soul, I'm free and luminous",de:"Ich fühle meine Seele, frei und leuchtend",it:"Sento la mia anima, libera e luminosa",pt:"Sinto minha alma, livre e luminosa"},desc:"Mon choix 1 - intense et lumineuse."},
-{id:"marvin",nom:"Marvin Gaye",tag:"Choix 2 - Groove",couleur:"#60a5fa",emoji:"🌟",fr:"What's Going On, lumière",tr:{es:"¿Qué está pasando? Hablemos con amor y luz",en:"What's going on? Let's talk with love and light",de:"Was ist los? Lass uns mit Liebe und Licht sprechen",it:"Cosa sta succedendo? Parliamo con amore e luce",pt:"O que está acontecendo? Vamos falar com amor e luz"},desc:"Mon choix 2 - doux et lumineux."},
-{id:"lumineux",nom:"Être Lumineux",tag:"Bonus",couleur:"#facc15",emoji:"✨",fr:"Reste lumineux",tr:{es:"Sigue luminoso incluso en la sombra",en:"Stay luminous even in the shadow",de:"Bleib leuchtend auch im Schatten",it:"Rimani luminoso anche nell'ombra",pt:"Continue luminoso mesmo na sombra"},desc:"Défi bonus - sourire en parlant."}
-];
-const $=id=>document.getElementById(id);
-const cass=$("cass"),game=$("game");
-let score=0,currentLang="es",mode="photos",current=null;
-function mood(m){cass.dataset.mood=m;}
-function say(t,m){$("bubble").textContent=t;if(m)mood(m);}
-function addScore(n){score+=n;$("score").textContent=score;}
-const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
-const pick=()=>PHRASES[Math.floor(Math.random()*PHRASES.length)];
-document.addEventListener("pointermove",e=>{
-const r=cass.getBoundingClientRect();
-const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);
-const d=Math.hypot(dx,dy)||1,k=Math.min(1,d/150)*6;
-[["pL",70],["pR",130]].forEach(([id,cx])=>{
-const p=$(id);if(p){p.setAttribute("cx",cx+dx/d*k);p.setAttribute("cy",100+dy/d*k);}
-});
-});
-function speak(text){
-return new Promise(res=>{
-if(!("speechSynthesis" in window)) return res();
-speechSynthesis.cancel();
-const u=new SpeechSynthesisUtterance(text);
-u.lang=LANGS[currentLang].code;u.rate=0.85;
-u.onstart=()=>mood("talk");
-u.onend=u.onerror=()=>{mood("idle");res();};
-speechSynthesis.speak(u);
-});
-}
-const norm=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();
-function similarity(a,b){
-a=norm(a);b=norm(b);
-const m=Array.from({length:a.length+1},(_,i)=>[i]);
-for(let j=1;j<=b.length;j++) m[0][j]=j;
-for(let i=1;i<=a.length;i++) for(let j=1;j<=b.length;j++) m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
-return 1-m[a.length][b.length]/(Math.max(a.length,b.length)||1);
-}
-function phrasesRound(){
-current=pick();
-const good=current[currentLang]||current.es;
-const options=shuffle([current,...shuffle(PHRASES.filter(p=>p!==current)).slice(0,2)]);
-game.innerHTML=`<p class="q">Comment dit-on : « ${current.fr} » ? <small>${LANGS[currentLang].flag} ${LANGS[currentLang].name}</small></p><div class="choices"></div>`;
-const box=game.querySelector(".choices");
-options.forEach(o=>{
-const b=document.createElement("button");
-b.textContent=o[currentLang]||o.es;
-b.onclick=async()=>{
-box.querySelectorAll("button").forEach(x=>x.disabled=true);
-if(o===current){b.classList.add("ok");addScore(1);say("¡Muy bien ! Bravo !","happy");await speak(good);}
-else{b.classList.add("ko");[...box.children].find(x=>x.textContent===good).classList.add("ok");say("Pas tout à fait. Écoute.","sad");await speak(good);}
-nextButton(phrasesRound);
-};
-box.appendChild(b);
-});
-}
-function repeatRound(){
-current=pick();
-const txt=current[currentLang]||current.es;
-game.innerHTML=`<p class="q">Écoute, puis répète :</p><p class="es">${txt}</p><p>« ${current.fr} »</p><div class="row"><button id="listen">🔊 Écouter</button><button id="mic" class="mic">🎤 Parler</button></div><p class="heard" id="heard"></p>`;
-$("listen").onclick=()=>speak(txt);
-$("mic").onclick=listen;
-say("Écoute puis parle en "+LANGS[currentLang].name+".","idle");
-}
-function listen(){
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-if(!SR){say("Micro non dispo, essaie Chrome.","sad");return;}
-const r=new SR();r.lang=LANGS[currentLang].code;r.interimResults=false;r.maxAlternatives=3;
-say("Je t’écoute…","idle");
-r.onresult=e=>{
-const alts=[...e.results[0]].map(a=>a.transcript);
-const best=Math.max(...alts.map(t=>similarity(t,current[currentLang]||current.es)));
-$("heard").textContent="Cass a entendu : « "+alts[0]+" »";
-if(best>=0.75){addScore(2);say("¡Perfecto !","happy");nextButton(repeatRound);}
-else{say("Presque ! Réessaie.","sad");}
-};
-r.onerror=e=>say(e.error==="not-allowed"?"Autorise le micro.":"Rien entendu.","sad");
-r.start();
-}
-function photosRound(){
-game.innerHTML=`<p class="q">7 légendes lumineuses • ${LANGS[currentLang].flag} ${LANGS[currentLang].name}</p><div class="photo-grid" id="grid"></div>`;
-const grid=$("grid");
-PHOTO_DEFIS.forEach(d=>{
-const txt=d.tr[currentLang]||d.tr.es;
-const card=document.createElement("div");
-card.className="photo-card";card.style.setProperty("--glow",d.couleur);
-card.innerHTML=`<div class="avatar" style="color:${d.couleur};background:${d.couleur}1a">${d.emoji}</div><span class="tag">${d.tag}</span><h3>${d.nom}</h3><p>${d.desc}</p><p><em>${d.fr}</em></p><p class="es">${txt}</p><div class="row"><button class="mic">🔊 Écouter</button><button class="next">🎤 Répéter</button></div><p class="heard"></p>`;
-const btnListen=card.querySelector(".mic");const btnRepeat=card.querySelector(".next");const heardEl=card.querySelector(".heard");
-btnListen.onclick=e=>{e.stopPropagation();speak(txt);say(d.nom+" : "+d.fr,"talk");};
-btnRepeat.onclick=e=>{e.stopPropagation();say("À toi ! Lumineux comme "+d.nom+" !","happy");listenPhoto(heardEl,txt);};
-grid.appendChild(card);
-});
-}
-function listenPhoto(heardEl,expected){
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-if(!SR){heardEl.textContent="Micro non dispo, Chrome.";return;}
-const r=new SR();r.lang=LANGS[currentLang].code;
-heardEl.textContent="Je t’écoute... sois lumineux ✨";mood("talk");
-r.onresult=e=>{
-const txt=e.results[0][0].transcript;const sim=similarity(txt,expected);
-heardEl.textContent="Tu as dit : « "+txt+" » ("+Math.round(sim*100)+"%)";
-if(sim>=0.6){addScore(3);say("¡Luminoso! "+Math.round(sim*100)+"% !","happy");}
-else{say("Pas mal, encore un peu de lumière ?","idle");}
-setTimeout(()=>mood("idle"),1200);
-};
-r.onerror=()=>{heardEl.textContent="Rien entendu.";mood("sad");};
-r.start();
-}
-function nextButton(fn){
-const b=document.createElement("button");b.className="next";b.textContent="Suivant";
-b.onclick=()=>{mood("idle");fn();};
-const row=document.createElement("div");row.className="row";row.appendChild(b);
-game.appendChild(row);b.focus();
-}
-function setMode(m){
-mode=m;speechSynthesis&&speechSynthesis.cancel();mood("idle");
-$("tabPhrases").setAttribute("aria-pressed",m==="phrases");
-$("tabRepeat").setAttribute("aria-pressed",m==="repeat");
-$("tabPhotos").setAttribute("aria-pressed",m==="photos");
-if(m==="phrases"){say("Trouve en "+LANGS[currentLang].name+" !");phrasesRound();}
-else if(m==="repeat"){say("Répète en "+LANGS[currentLang].name+" !");repeatRound();}
-else{say("7 légendes : Otis, Aretha, Nick, Jimi + Nina & Marvin + bonus !","happy");photosRound();}
-}
-function setLang(l){
-currentLang=l;
-document.querySelectorAll(".langs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===l));
-setMode(mode);
-}
-document.querySelectorAll(".langs button").forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
-$("tabPhrases").onclick=()=>setMode("phrases");
-$("tabRepeat").onclick=()=>setMode("repeat");
-$("tabPhotos").onclick=()=>setMode("photos");
-setLang("es");
-</script>
-</body>
-</html>
+Titre de la conversation
+mais bien joué quand meme
+il y a du tres bon
+pour la diction c'est pas mal
+Aujourd’hui
+
+Voilà la version corrigée, ultra lisible :
+
+
+Repete Si Tu Peux
+
+Repete Si Tu Peux
+HTML
+J'ai corrigé :
+
+Fond blanc pur, plus de jaune pâle qui écrase
+Phrase à traduire en énorme noir gras, lisible de loin
+Cartes avec grosse bordure noire + ombre, input bien contrasté
+Le mode diction que tu aimes, je l'ai gardé tel quel (c'est le bon)
+Pour mettre à jour ton site GitHub, même manip que tout à l'heure :
+
+Ouvre le lien ci-dessus
+Fais Ctrl+A → Ctrl+C sur la page de code brut si besoin, ou je te refais le fichier code brut
+Tu veux que je te refasse le fichier index_code.txt prêt à coller pour cette version lisible ?
+
+je suis de nouveau ds html
+je supprime ?
+Aujourd’hui
+
+Oui, supprime tout comme tout à l'heure.
+
+Puis colle la nouvelle version lisible :
+
+Ouvre ce lien :
+
+Chargement de l’artefact...
+
+
+Index Code Lisible
+TXT
+Ctrl + A → Ctrl + C
+Retour sur ta page GitHub vide → Ctrl + V
+En bas Commit changes
+Après, attends 1 min et rafraîchis ton site, les phrases seront bien noires et énormes, lisibles.
+
+Tu supprimes ?
+
+j'arrfive à le collé grrr
+Aujourd’hui
+
+Je sais, ça lag, c'est normal, le fichier est gros.
+
+On change de méthode, plus besoin de coller :
+
+Clique sur Cancel pour sortir de l'éditeur
+Sur la page de ton repo, clique Add file > Upload files
+Glisse ce fichier :
+
+Index
+
+Index
+HTML
+Pas de copier-coller, juste glisser comme une photo.
+
+Tu essaies comme ça ?
+
+je recommence ds index html dsl
+Aujourd’hui
+
+T'inquiète, tu fais bien.
+
+Tu es dans index.html, c'est exactement là qu'il faut être.
+
+Si tu as tout supprimé et que tu es sur une page blanche :
+
+Ouvre ce code :
+
+
+
+Index Code Lisible
+TXT
+Ctrl + A puis Ctrl + C
+Retourne dans ta page vide GitHub → Ctrl + V
+Attends 5 secondes que ça colle (ça freeze un peu, c'est normal)
+Tout en bas → bouton vert Commit changes
+Si ça bloque encore au collage, on passe en mode ultra simple : tu fermes tout et tu fais juste Upload files avec le fichier, sans coller.
+
+Tu me dis où tu en es ?
+
+ça copie mais pas moyen de coller
+Aujourd’hui
+
+Ok si ça copie mais ça colle pas, c'est GitHub qui bloque les gros collages. On arrête de se battre avec.
+
+Fais ça, c'est 10 secondes et pas de collage :
+
+Sur ta page GitHub où tu es, clique en haut sur Cancel ou <> Code pour revenir à l'accueil du repo
+Clique sur Add file > Upload files
+Glisse ce fichier :
+
+Index
+
+Index
+HTML
+C'est tout. Pas de copier, pas de coller, juste glisser comme une photo sur Facebook.
+
+Tu veux essayer ?
+
+image.png  ca me met ici
+Aujourd’hui
+
+Parfait ! Tu es exactement au bon endroit, c'est ici qu'il faut être !
+
+Tu vois "Drag files here" ?
+
+Fais ça :
+
+Clique sur le lien bleu "choose your files"
+Une fenêtre s'ouvre sur ton ordi/téléphone
+Sélectionne le fichier index.html que tu as téléchargé tout à l'heure :
+
+Index
+
+Index
+HTML
+Si tu ne l'as plus, retélécharge-le en cliquant ici d'abord
+Une fois choisi, tu vas voir le nom index.html apparaître en haut
+Descends en bas et clique sur le bouton vert "Commit changes"
+C'est tout ! Après 1 minute ton site sera à jour.
+
+Tu cliques sur "choose your files" ?
+
+oui je crois que cesyt bon
+Aujourd’hui
+
+YES ! Tu l'as fait ! 🎉
+
+Si tu as cliqué sur Commit changes en bas, c'est bon, c'est en ligne.
+
+Maintenant :
+
+Attends 1-2 minutes (GitHub met un peu de temps)
+Ouvre ton site : https://claudeweber90-ui.github.io/repete-si-tu-peux-/
+Fais Ctrl + F5 pour forcer le rafraîchissement
+Tu devrais voir la nouvelle version lisible, avec les grosses phrases bien noires.
+
+Et après tu pourras partager ce lien direct sur Facebook, plus besoin de Panda.
+
+Tu me dis quand tu le vois ?
+
+oui je le vois mais on ne voit pas bien du tout les phrases ds bandes blanche je peux changer de methode si il le faut meta
+en plus je n'ai pas vu le defis photo a cause du debut illisible
+Aujourd’hui
+C'est corrigé — voici la version ultra lisible avec le défi photo bien visible :
+
+
+Repete Si Tu Peux
+
+Repete Si Tu Peux
+HTML
+J'ai tout changé :
+
+Fond blanc pur, texte noir énorme 48px — plus de gris clair sur blanc
+Plus de bandes blanches fantômes, tout est bordure noire épaisse bien visible
+Le défi photo que tu n'avais pas vu : il y a maintenant un bouton VÉRIFIER PHOTO et 🎤 DÉCRIRE bien visibles en haut, plus cachés par le début illisible
+Mode trad et diction toujours là, mais lisible sur téléphone
+Pour le mettre sur ton GitHub, même méthode que tout à l'heure, je te prépare le fichier prêt dans 2 secondes.
+
+Tu veux que je te le mette en fichier index.html prêt à glisser ?
+
+la j"ai supprimé
+Aujourd’hui
+Super, page vide = parfait.
+
+Colle cette nouvelle version ultra lisible :
+
+1. Ouvre ce code :
+
+
+
+
+Index Code Ultra
+TXT
+2. Dedans fais :
+
+Ctrl + A → tout bleu
+Ctrl + C
+3. Reviens sur ta page GitHub vide :
+
+Clique dedans
+Ctrl + V
+En bas → bouton vert Commit changes
+C'est la version où on voit bien les phrases, même le défi photo qui était caché avant.
+
+Tu colles ?
+
+
+
+Demandez à Meta AI…
